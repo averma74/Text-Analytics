@@ -14,3 +14,9 @@ The list of Cybersecurity experts we chose are:
 8.	@threatintel
 9.	@symantec
 10.	@McAfee
+
+Elements:
+1. tweet_dumper.py : It's the tweepy python program file. We just have to put the twitter id in the program and it gives a csv file of the id's tweeter data.
+2. MainProgram.py : This is the program which performs the data processing. We provide the tweepy file as input to this program and it's output is the final thesaurus for the given profile.
+3. ExpertTweets Folder: Contains the tweepy output files.
+4. ThesaurusCSVs Folder: Contains the mainProgram.py's output files which are the tweeter user's fingerprint.
