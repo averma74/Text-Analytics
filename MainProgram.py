@@ -9,7 +9,8 @@ from nltk.tokenize.casual import _replace_html_entities
 
 import csv
 
-df = pd.read_csv('symantec_tweets.csv', encoding="ISO-8859-1")  # Reading the Twitter Corpus file
+file = 'digicert_tweets'
+df = pd.read_csv(file + '.csv', encoding="ISO-8859-1")  # Reading the Twitter Corpus file
 
 df.columns = ["A", "B", "C"]
 
@@ -36,10 +37,7 @@ def unicodeReplacement(tweet):
 
 # Helper function for PoS Tagging
 def treebankToWordnetPOS(treebankPosTag):
-    return {'J': wordnet.ADJ,
-            'V': wordnet.VERB,
-            'N': wordnet.NOUN,
-            'R': wordnet.ADV}.get(treebankPosTag[0], wordnet.NOUN)
+    return {'N': wordnet.NOUN}.get(treebankPosTag[0], wordnet.NOUN)
 
 
 # Declares Lemmatizer
@@ -48,10 +46,10 @@ lemma = WordNetLemmatizer()
 
 # End of helper functions
 
-def dictionary(keyword):
-    wordCount = 0
+def dictionary():
+    wordCount = 0 
     for each in df["C"]:
-        if keyword in each.lower():
+
             wordCount = wordCount + 1
             text = each.lower()  # Makes each Tweet lowercase
             text = unicodeReplacement(text)  # Removes unicode
@@ -63,6 +61,7 @@ def dictionary(keyword):
             text = re.sub(r"via", "", text)  # Removes "via"
             text = re.sub(r"&", "", text)  # Removes "&"
             text = re.sub(r"icymi", "", text)  # Removes "ICYMI"
+            text = re.sub('[^A-Za-z0-9]+', ' ', text) # Aditee
 
             text = ' '.join(
                 [word for word in text.split() if word not in stopwords.words("english")])  # Removes stop words
@@ -85,20 +84,15 @@ def dictionary(keyword):
     sorted_freqDict.reverse()  # Reverses the order
 
     print("\nWord Count = " + str(wordCount) + "\n")  # Prints total frequency of search word
-    # print(sorted_freqDict)
-
-    for word in sorted_freqDict:
-        print(word)  # Prints each word and frequency
 
     # The following lines print the dictionary to a CSV file and are optional
-    with open('%sWordCloud.csv' % keyword.lstrip(), 'w') as csv_file:
+    with open('%s_Thesaurus.csv' % file.lstrip(), 'w') as csv_file:
         writer = csv.writer(csv_file)
         for key, value in sorted_freqDict:
             writer.writerow([key, value])
 
 
 # The lines to run the code
-keyword = input("Enter keyword to be searched: \n")
-dictionary(" " + keyword)
+dictionary()
 
 
